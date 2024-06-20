@@ -19,27 +19,47 @@ export class Fighter {
         this.states = {
             [FighterState.IDLE]: {
                 init: this.handleWalkIdleInit.bind(this),
-                update: this.handleWalkIdleState.bind(this)
+                update: this.handleWalkIdleState.bind(this),
+                validFrom: [
+                    undefined,
+                    FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD,
+                    FighterState.JUMP_UP, FighterState.JUMP_FORWARD, FighterState.JUMP_BACKWARD
+                ],
             },
             [FighterState.JUMP_UP]: {
-                init: this.handleJumpUpInit.bind(this),
-                update: this.handleJumpUpState.bind(this)
+                init: this.handleJumpInit.bind(this),
+                update: this.handleJumpState.bind(this),
+                validFrom: [FighterState.IDLE],
+            },
+            [FighterState.JUMP_FORWARD]: {
+                init: this.handleJumpInit.bind(this),
+                update: this.handleJumpState.bind(this),
+                validFrom: [FighterState.IDLE, FighterState.WALK_FORWARD,],
+            },
+            [FighterState.JUMP_BACKWARD]: {
+                init: this.handleJumpInit.bind(this),
+                update: this.handleJumpState.bind(this),
+                validFrom: [FighterState.IDLE, FighterState.WALK_BACKWARD,],
             },
             [FighterState.WALK_FORWARD]: {
-                init: this.handleWalkForwardInit.bind(this),
-                update: this.handleWalkForwardState.bind(this)
+                init: this.handleMoveInit.bind(this),
+                update: this.handleMoveState.bind(this),
+                validFrom: [FighterState.IDLE, FighterState.WALK_BACKWARD,],
             },
             [FighterState.WALK_BACKWARD]: {
-                init: this.handleWalkBackwardInit.bind(this),
-                update: this.handleWalkBackwardState.bind(this)
+                init: this.handleMoveInit.bind(this),
+                update: this.handleMoveState.bind(this),
+                validFrom: [FighterState.IDLE, FighterState.WALK_FORWARD,],
             }
         }
 
         this.changeState(FighterState.IDLE);
-
     }
 
     changeState(newState) {
+        if(newState === this.currentState || !this.states[newState].validFrom.includes(this.currentState))
+            return;
+        
         this.currentState = newState;
         this.animationFrame = 0;
 
@@ -55,11 +75,12 @@ export class Fighter {
 
     }
 
-    handleJumpUpInit() {
+    handleJumpInit() {
         this.velocity.y = this.initialVelocity.jump;
+        this.handleMoveInit();
     }
 
-    handleJumpUpState(time) {
+    handleJumpState(time) {
         this.velocity.y += this.gravity * time.secondsPassed;
 
         if (this.position.y > STAGE_FLOOR) {
@@ -68,19 +89,11 @@ export class Fighter {
         }
     }
 
-    handleWalkForwardInit() {
-        this.velocity.x = 150 * this.direction;
+    handleMoveInit() {
+        this.velocity.x = this.initialVelocity.x[this.currentState] ?? 0;
     }
 
-    handleWalkForwardState() {
-
-    }
-
-    handleWalkBackwardInit() {
-        this.velocity.x = -150 * this.direction;
-    }
-
-    handleWalkBackwardState() {
+    handleMoveState() {
 
     }
 
@@ -112,7 +125,7 @@ export class Fighter {
     }
 
     update(time, context) {
-        this.position.x += this.velocity.x * time.secondsPassed;
+        this.position.x += this.velocity.x * this.direction * time.secondsPassed;
         this.position.y += this.velocity.y * time.secondsPassed;
 
         this.states[this.currentState].update(time, context);

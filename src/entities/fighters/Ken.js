@@ -22,6 +22,15 @@ export class Ken extends Fighter {
             ['jumpUp-6', [[319, 1534, 48, 86], [25, 103]]],
             ['jumpUp-7', [[375, 1560, 55, 103], [32, 107]]],
 
+            // ['jump-roll-1', [[16, 2261, 55, 85], ]],
+            ['jump-roll-1', [[79, 2238, 55, 103], [25, 106]]],
+            ['jump-roll-2', [[142, 2198, 61, 78], [22, 90]]],
+            ['jump-roll-3', [[211, 2204, 104, 42], [61, 76]]],
+            ['jump-roll-4', [[323, 2167, 53, 82], [42, 111]]],
+            ['jump-roll-5', [[384, 2198, 122, 44], [71, 81]]],
+            ['jump-roll-6', [[514, 2183, 71, 87], [53, 98]]],
+            ['jump-roll-7', [[593, 2188, 55, 103], [32, 107]]],
+
 
             ['forwards-1', [[16, 162, 53, 83], [27, 81]]],
             ['forwards-2', [[77, 157, 60, 88], [35, 86]]],
@@ -51,11 +60,24 @@ export class Ken extends Fighter {
             [FighterState.WALK_BACKWARD]: [
                 ['backwards-1', 65], ['backwards-2', 65], ['backwards-3', 65], ['backwards-4', 65], ['backwards-5', 65], ['backwards-6', 65]
             ],
+            [FighterState.JUMP_FORWARD]: [
+                ['jump-roll-1', 200], ['jump-roll-2', 50], ['jump-roll-3', 50], ['jump-roll-4', 50], ['jump-roll-5', 50], ['jump-roll-6', 50], ['jump-roll-7', 0]
+            ],
+            [FighterState.JUMP_BACKWARD]: [
+                ['jump-roll-7', 200], ['jump-roll-6', 50], ['jump-roll-5', 50], ['jump-roll-4', 50], ['jump-roll-3', 50], ['jump-roll-2', 50], ['jump-roll-1', 0]
+            ],
         };
 
         this.initialVelocity = {
+            x: {
+                [FighterState.WALK_FORWARD]: 200,
+                [FighterState.WALK_BACKWARD]: -150,
+                [FighterState.JUMP_FORWARD]: 170,
+                [FighterState.JUMP_BACKWARD]: -200,
+            },
+
             jump: -420,
-        }
+        };
 
         this.gravity = 1000;
     }
