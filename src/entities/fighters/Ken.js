@@ -45,6 +45,10 @@ export class Ken extends Fighter {
             ['backwards-4', [[649, 155, 58, 90], [38, 89]]],
             ['backwards-5', [[715, 154, 58, 91], [36, 88]]],
             ['backwards-6', [[781, 156, 57, 89], [36, 87]]],
+
+            ['crouch-1', [[16, 1131, 53, 83], [27, 81]]],
+            ['crouch-2', [[77, 1145, 57, 69], [25, 66]]],
+            ['crouch-3', [[142, 1153, 61, 61], [25, 58]]],
         ]);
 
         this.animations = {
@@ -65,6 +69,15 @@ export class Ken extends Fighter {
             ],
             [FighterState.JUMP_BACKWARD]: [
                 ['jump-roll-7', 200], ['jump-roll-6', 50], ['jump-roll-5', 50], ['jump-roll-4', 50], ['jump-roll-3', 50], ['jump-roll-2', 50], ['jump-roll-1', 0]
+            ],
+            [FighterState.CROUCH]: [
+                ['crouch-3', 0]
+            ],
+            [FighterState.CROUCH_DOWN]: [
+                ['crouch-1', 30], ['crouch-2', 30], ['crouch-3', 30], ['crouch-3', -2], 
+            ],
+            [FighterState.CROUCH_UP]: [
+                ['crouch-3', 30], ['crouch-2', 30], ['crouch-1', 30], ['crouch-1', -2], 
             ],
         };
 

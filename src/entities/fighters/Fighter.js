@@ -19,11 +19,12 @@ export class Fighter {
         this.states = {
             [FighterState.IDLE]: {
                 init: this.handleWalkIdleInit.bind(this),
-                update: this.handleWalkIdleState.bind(this),
+                update: () => { },
                 validFrom: [
                     undefined,
                     FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD,
-                    FighterState.JUMP_UP, FighterState.JUMP_FORWARD, FighterState.JUMP_BACKWARD
+                    FighterState.JUMP_UP, FighterState.JUMP_FORWARD, FighterState.JUMP_BACKWARD,
+                    FighterState.CROUCH_UP
                 ],
             },
             [FighterState.JUMP_UP]: {
@@ -43,23 +44,38 @@ export class Fighter {
             },
             [FighterState.WALK_FORWARD]: {
                 init: this.handleMoveInit.bind(this),
-                update: this.handleMoveState.bind(this),
+                update: () => { },
                 validFrom: [FighterState.IDLE, FighterState.WALK_BACKWARD,],
             },
             [FighterState.WALK_BACKWARD]: {
                 init: this.handleMoveInit.bind(this),
-                update: this.handleMoveState.bind(this),
+                update: () => { },
                 validFrom: [FighterState.IDLE, FighterState.WALK_FORWARD,],
-            }
+            },
+            [FighterState.CROUCH]: {
+                init: () => { },
+                update: () => { },
+                validFrom: [FighterState.CROUCH_DOWN],
+            },
+            [FighterState.CROUCH_DOWN]: {
+                init: () => { },
+                update: this.handleCrouchDownState.bind(this),
+                validFrom: [FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD],
+            },
+            [FighterState.CROUCH_UP]: {
+                init: () => { },
+                update: this.handleCrouchUpState.bind(this),
+                validFrom: [FighterState.CROUCH],
+            },
         }
 
         this.changeState(FighterState.IDLE);
     }
 
     changeState(newState) {
-        if(newState === this.currentState || !this.states[newState].validFrom.includes(this.currentState))
+        if (newState === this.currentState || !this.states[newState].validFrom.includes(this.currentState))
             return;
-        
+
         this.currentState = newState;
         this.animationFrame = 0;
 
@@ -69,10 +85,6 @@ export class Fighter {
     handleWalkIdleInit() {
         this.velocity.x = 0;
         this.velocity.y = 0;
-    }
-
-    handleWalkIdleState() {
-
     }
 
     handleJumpInit() {
@@ -93,8 +105,16 @@ export class Fighter {
         this.velocity.x = this.initialVelocity.x[this.currentState] ?? 0;
     }
 
-    handleMoveState() {
+    handleCrouchDownState() {
+        if (this.animations[this.currentState][this.animationFrame][1] === -2) {
+            this.changeState(FighterState.CROUCH);
+        }
+    }
 
+    handleCrouchUpState() {
+        if (this.animations[this.currentState][this.animationFrame][1] === -2) {
+            this.changeState(FighterState.IDLE);
+        }
     }
 
     updateStateConstraints(context) {
@@ -147,7 +167,7 @@ export class Fighter {
 
     draw(context) {
         const [frameKey] = this.animations[this.currentState][this.animationFrame];
-        
+
         const [[x, y, width, height],
             [originX, originY]] = this.frames.get(frameKey);
 
