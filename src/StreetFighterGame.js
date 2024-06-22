@@ -16,8 +16,8 @@ export class StreetFighterGame {
         this.debugContext = this.getDebugContext();
 
         this.fighters = [
-            new Ken(280, STAGE_FLOOR, FighterDirection.LEFT),
-            new Ryu(104, STAGE_FLOOR, FighterDirection.RIGHT),
+            new Ryu(104, STAGE_FLOOR, FighterDirection.RIGHT, 0),
+            new Ken(280, STAGE_FLOOR, FighterDirection.LEFT, 1),
         ]
 
         this.entities = [
