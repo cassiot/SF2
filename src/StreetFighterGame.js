@@ -4,6 +4,7 @@ import { Stage } from "./entities/Stage.js";
 import { FpsCounter } from "./FpsCounter.js";
 import { STAGE_FLOOR } from "./constants/stage.js";
 import { FighterDirection, FighterState } from "./constants/fighters.js";
+import { registerKeyboardEvents } from "./inputHandler.js";
 
 export class StreetFighterGame {
 
@@ -68,23 +69,9 @@ export class StreetFighterGame {
         this.draw();
     }
 
-    handleFormSubmit(event) {
-        event.preventDefault();
-
-        const selectedCheckboxes = Array.from(event.target.querySelectorAll('input:checked')).map(checkbox => checkbox.value);
-        const options = event.target.querySelector('select');
-
-        this.fighters.forEach(fighter => {
-            if (selectedCheckboxes.includes(fighter.name)) {
-                fighter.changeState(options.value);
-            }
-        });
-    }
-
     handleDebugCanvas(event) {
         onkeypress = (event) => {
             if (event.code == 'Space') {
-                // console.log('test');
                 const fighter0 = this.fighters[0];
                 const fighter1 = this.fighters[1];
 
@@ -105,7 +92,8 @@ export class StreetFighterGame {
     }
 
     start() {
-        document.addEventListener('submit', this.handleFormSubmit.bind(this));
+        registerKeyboardEvents();
+
         document.addEventListener('keypress', this.handleDebugCanvas.bind(this));
 
         window.requestAnimationFrame(this.frame.bind(this));

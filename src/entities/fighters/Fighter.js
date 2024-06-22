@@ -1,5 +1,6 @@
 import { FighterState } from "../../constants/fighters.js";
 import { STAGE_FLOOR } from "../../constants/stage.js";
+import { isKeyDown, isKeyUp } from "../../inputHandler.js";
 
 export class Fighter {
     constructor(name, x, y, direction) {
@@ -19,7 +20,7 @@ export class Fighter {
         this.states = {
             [FighterState.IDLE]: {
                 init: this.handleWalkIdleInit.bind(this),
-                update: () => { },
+                update: this.handleIdleState.bind(this),
                 validFrom: [
                     undefined,
                     FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD,
@@ -44,12 +45,12 @@ export class Fighter {
             },
             [FighterState.WALK_FORWARD]: {
                 init: this.handleMoveInit.bind(this),
-                update: () => { },
+                update: this.handleWalkForwardState.bind(this),
                 validFrom: [FighterState.IDLE, FighterState.WALK_BACKWARD,],
             },
             [FighterState.WALK_BACKWARD]: {
                 init: this.handleMoveInit.bind(this),
-                update: () => { },
+                update: this.handleWalkBackwardState.bind(this),
                 validFrom: [FighterState.IDLE, FighterState.WALK_FORWARD,],
             },
             [FighterState.CROUCH]: {
@@ -90,6 +91,19 @@ export class Fighter {
     handleJumpInit() {
         this.velocity.y = this.initialVelocity.jump;
         this.handleMoveInit();
+    }
+
+    handleIdleState() {
+        if (isKeyDown('ArrowLeft')) this.changeState(FighterState.WALK_BACKWARD);
+        if (isKeyDown('ArrowRight')) this.changeState(FighterState.WALK_FORWARD);
+    }
+
+    handleWalkForwardState() {
+        if (isKeyUp('ArrowRight')) this.changeState(FighterState.IDLE);
+    }
+
+    handleWalkBackwardState() {
+        if (isKeyUp('ArrowLeft')) this.changeState(FighterState.IDLE);
     }
 
     handleJumpState(time) {
