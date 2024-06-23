@@ -83,7 +83,7 @@ export class StreetFighterGame {
                 const [frameKey] = fighter1.animations[fighter1.currentState][fighter1.animationFrame];
 
                 const [[x, y, width, height],
-                    [originX, originY]] = fighter1.frames.get(`jumpUp-${this.debugImageIndex}`);
+                    [originX, originY]] = fighter1.frames.get(`jump-start`);//fighter1.frames.get(`jump-up-${this.debugImageIndex}`);
 
                 this.debugContext.reset();
                 this.debugContext.drawImage(fighter1.image, x, y, width, height, 5, 5, width, height);
