@@ -4,7 +4,7 @@ import { Stage } from "./entities/Stage.js";
 import { FpsCounter } from "./FpsCounter.js";
 import { STAGE_FLOOR } from "./constants/stage.js";
 import { FighterDirection, FighterState } from "./constants/fighters.js";
-import { registerKeyboardEvents } from "./inputHandler.js";
+import { pollGamepads, registerGamepadEvents, registerKeyboardEvents } from "./inputHandler.js";
 import { Shadow } from "./entities/fighters/Shadow.js";
 
 export class StreetFighterGame {
@@ -67,6 +67,7 @@ export class StreetFighterGame {
             previous: time
         }
 
+        pollGamepads();
         this.update();
         this.draw();
     }
@@ -95,7 +96,7 @@ export class StreetFighterGame {
 
     start() {
         registerKeyboardEvents();
-
+        registerGamepadEvents();
         document.addEventListener('keypress', this.handleDebugCanvas.bind(this));
 
         window.requestAnimationFrame(this.frame.bind(this));
