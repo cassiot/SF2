@@ -1,4 +1,4 @@
-import { FighterState } from "../../constants/fighters.js";
+import { FighterState, FrameDelay } from "../../constants/fighters.js";
 import { Fighter } from "./Fighter.js";
 
 export class Ken extends Fighter {
@@ -50,6 +50,14 @@ export class Ken extends Fighter {
             ['crouch-1', [[16, 1131, 53, 83], [27, 81]]],
             ['crouch-2', [[77, 1145, 57, 69], [25, 66]]],
             ['crouch-3', [[142, 1153, 61, 61], [25, 58]]],
+
+            ['idle-turn-1', [[453, 19, 54, 95], [29, 92]]],
+            ['idle-turn-2', [[515, 16, 58, 98], [30, 94]]],
+            ['idle-turn-3', [[581, 20, 54, 94], [27, 90]]],
+
+            ['crouch-turn-1', [[251, 1153, 53, 61], [26, 58]]],
+            ['crouch-turn-2', [[312, 1153, 52, 61], [27, 58]]],
+            ['crouch-turn-3', [[372, 1153, 53, 61], [29, 58]]],
         ]);
 
         this.animations = {
@@ -85,6 +93,12 @@ export class Ken extends Fighter {
             ],
             [FighterState.CROUCH_UP]: [
                 ['crouch-3', 30], ['crouch-2', 30], ['crouch-1', 30], ['crouch-1', -2], 
+            ],
+            [FighterState.IDLE_TURN]: [
+                ['idle-turn-3', 33], ['idle-turn-2', 33], ['idle-turn-1', 33], ['idle-turn-1', FrameDelay.TRANSITION], 
+            ],
+            [FighterState.CROUCH_TURN]: [
+                ['crouch-turn-3', 33], ['crouch-turn-2', 33], ['crouch-turn-1', 33], ['crouch-turn-1', FrameDelay.TRANSITION], 
             ],
         };
 
